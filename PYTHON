@@ -1,0 +1,38 @@
+import sqlite3
+
+# 1. Conectar ao banco de dados (se não existir, ele cria o arquivo)
+conexao = sqlite3.connect('clientes.db')
+cursor = conexao.cursor()
+
+# 2. Criar a tabela (se ainda não existir)
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS clientes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        email TEXT NOT NULL,
+        telefone TEXT
+    )
+''')
+conexao.commit()
+
+def cadastrar_cliente(nome, email, telefone):
+    try:
+        cursor.execute('''
+            INSERT INTO clientes (nome, email, telefone)
+            VALUES (?, ?, ?)
+        ''', (nome, email, telefone))
+        conexao.commit()
+        print(f"\n✅ Cliente {nome} cadastrado com sucesso!")
+    except Exception as e:
+        print(f"❌ Erro ao cadastrar: {e}")
+
+# --- Interface Simples no Console ---
+print("--- SISTEMA DE CADASTRO ---")
+nome_input = input("Nome do cliente: ")
+email_input = input("Email: ")
+tel_input = input("Telefone: ")
+
+cadastrar_cliente(nome_input, email_input, tel_input)
+
+# Fechar conexão ao terminar
+conexao.close()

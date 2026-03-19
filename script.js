@@ -1,15 +1,12 @@
 const form = document.getElementById('form-cadastro');
 const listaUl = document.getElementById('lista-clientes');
 
-// Função para carregar dados do LocalStorage ao abrir a página
-window.onload = () => {
-    exibirClientes();
-};
+// Carrega a lista ao abrir a página
+window.onload = exibirClientes;
 
 form.addEventListener('submit', (e) => {
-    e.preventDefault(); // Impede a página de recarregar
+    e.preventDefault();
 
-    // Captura os valores dos inputs
     const novoCliente = {
         nome: document.getElementById('nome').value,
         email: document.getElementById('email').value,
@@ -17,13 +14,20 @@ form.addEventListener('submit', (e) => {
         cpf: document.getElementById('cpf').value
     };
 
+    // 1. Salva o cliente
     salvarCliente(novoCliente);
-    form.reset(); // Limpa o formulário
-    exibirClientes(); // Atualiza a lista na tela
+
+    // 2. Limpa o formulário
+    form.reset();
+
+    // 3. Mostra o aviso de sucesso
+    alert("✅ Cliente cadastrado com sucesso!");
+
+    // 4. Atualiza a lista visual
+    exibirClientes();
 });
 
 function salvarCliente(cliente) {
-    // Pega a lista atual ou cria uma vazia se for o primeiro
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
     clientes.push(cliente);
     localStorage.setItem('clientes', JSON.stringify(clientes));
@@ -31,16 +35,18 @@ function salvarCliente(cliente) {
 
 function exibirClientes() {
     let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
-    listaUl.innerHTML = ''; // Limpa a lista antes de renderizar
+    listaUl.innerHTML = ''; 
 
     clientes.forEach((cliente, index) => {
         const li = document.createElement('li');
+        li.style.padding = "10px";
+        li.style.borderBottom = "1px solid #ddd";
+        li.style.display = "flex";
+        li.style.justifyContent = "space-between";
+        
         li.innerHTML = `
-            <div>
-                <strong>${cliente.nome}</strong><br>
-                <small>${cliente.email} | ${cliente.cpf}</small>
-            </div>
-            <button onclick="removerCliente(${index})" class="btn-deletar">Excluir</button>
+            <span><strong>${cliente.nome}</strong> (${cliente.email})</span>
+            <button onclick="removerCliente(${index})" style="color: red; cursor: pointer; border:none; background:none;">Excluir</button>
         `;
         listaUl.appendChild(li);
     });
@@ -48,8 +54,7 @@ function exibirClientes() {
 
 function removerCliente(index) {
     let clientes = JSON.parse(localStorage.getItem('clientes'));
-    clientes.splice(index, 1); // Remove o item do array
+    clientes.splice(index, 1);
     localStorage.setItem('clientes', JSON.stringify(clientes));
     exibirClientes();
 }
- DataView BiquadFilterNode black>
